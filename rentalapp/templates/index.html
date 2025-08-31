@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+    {% load static %}
+
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        {% block title%}
+        <title>Home</title>
+        {% endblock %}
+        <link rel="stylesheet" href="https://unpkg.com/swiper@7/swiper-bundle.min.css" />
+        <!--     font awesome cdn link-->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+        <!-- custom css file link  -->
+        <link rel="stylesheet" href=" {% static 'css/style.css' %} ">
+        <link rel="stylesheet" href=" {% static 'css/passvalid.css' %} ">
+        <link rel="stylesheet" href=" {% static 'css/uiconstyle.css' %} ">
+
+    </head>
+
+    <body>
+        {% block header %}
+        <header class="header">
+            <div id="menu-btn" class="fas fa-bars"></div>
+            {% if messages %}
+            {% for msg in messages %}
+            <script type="text/javascript">
+                alert('{{ msg }}');
+            </script>
+            {% endfor %}
+            {% endif %}
+
+            <a href="/index" class="logo"> <span>RAV</span>carz </a>
+            
+            <div>
+                {% comment %} {% if user.is_authenticated %} {% endcomment %}
+                {% if request.session.log_user %}
+                <h1>Welcome  {{ userdata.fname }}.</h1>
+                {% else %}
+                <h1>Please login<h1>
+                {% endif %}
+            </div>
+            
+
+            <nav class="navbar">
+
+                <a href="/index">home</a>
+                <a href="/vehicles">vehicles</a>
+                <a href="/services">services</a>
+                <!-- <a href=" {% static '#featured' %} ">featured</a> -->
+                <a href=" /feedback ">feedback</a>
+                <a href="/contact">contact</a>
+                
+
+                    <div class="action">
+                        <div class="profile" onclick="menuToggle();">
+                            {% if user.image %}
+                            <img src="{{user.image}}">
+                            {%else%}
+                            <img src="{% static 'image/profileicons/profile-user.png' %}" alt="{% static 'image/profileicons/profile-user.png' %}">
+                            {%endif%}
+                        </div>
+                        
+                        <div class="umenu">
+                            <h3>My <span>Profile</span></h3>
+                            <ul>
+                                {% if request.session.log_user %}
+                                <li><img src="{% static 'image/profileicons/account.png' %}"><a href="/myprofile">My
+                                        Profile</a></li>
+                                <li id="login-btn"><img src="{% static 'image/profileicons/log-out.png' %}"><a
+                                        href="/logout">Logout</a></li>
+                                {% else %}
+                                <li id="login-btn" class="login-btn"><img
+                                        src="{% static 'image/profileicons/edit.png' %}"><a href="#">Login & Reg</a></li>
+                                {% endif %}
+                               
+                                {% if request.session.log_user %}
+                                <li><img src="{% static 'image/profileicons/settings.png' %}"><a href="/booking">Booking
+                                        History</a></li>
+                                {% endif %}
+                                <li><img src="{% static 'image/profileicons/help.png' %}"><a href="/helps">Help</a></li>
+
+                            </ul>
+                        </div>
+                    </div>
+            </nav>
+
+            <!-- {% if request.session.log_user %}
+        <div id="login-btn" class="login-btn"></div>
+        <a href="/logout" class="btn">logout</a>
+        {% else %} -->
+            <!--        </nav>-->
+
+            <!-- <div id="login-btn" class="login-btn">
+                <button class="btn">login</button> -->
+            <!--                <a href="/log" class="btn">login</a>-->
+            <!-- <i class="far fa-user"></i>
+            </div>
+        {% endif %} -->
+
+        </header>
+
+        {% endblock %}
+
+        <div class="login-form-container">
+
+        <span id="close-login-form" class="fas fa-times"></span>
+        <form action="/checklogin" method="post">
+            {% csrf_token %}
+            <h3>user login </h3>
+
+            {{form.as_p}}
+
+            <input type="email" placeholder="email" class="box" name="email" required>
+            <input type="password" id="upass" name="upass" title="Password is Required.." placeholder="password" class="box" required>
+            <input type="submit" value="login" class="btn">
+
+            <p style="margin-top:10px;">
+            <a href="/forgotPswd" style="color:blue; text-decoration:underline;">Forgot Password?</a>
+        </p>
+
+<!--            <p style="background-color: yellow;" class="btn">  <a href="/log" >Terms and Conditions</a> </p>-->
+            <p style="color:black">  <a  style="color:black"href="/admin/" >Login With Admin?</a> </p>
+        </form>
+
+        <form action="/showdata" class="signup" method="post">
+                {% csrf_token %}
+                <h3>Enter your details</h3>
+                <div class="message"></div>
+                <input type="text" placeholder="Enter your First name" class="box" name="fname" required>
+                <input type="text" placeholder="Enter your Last name" class="box" name="lname" required>
+                <input type="email" placeholder="Enter your email" class="box" name="email" required>
+                <input type="password" id="pass" name="pass" 
+                    title="Must contain at least one Number and one Uppercase and Lowercase letter, and at least 8 or more characters"
+                    required placeholder="password" class="box">
+                    {% comment %} pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" {% endcomment %}
+                <div>
+                    <input type="password" id="rpass" name="rpass" onclick="checkPassword()"
+                        
+                        title="Password and Confirm Password Does not matched.." required placeholder="Confirm Password"
+                        class="box">
+                    
+                        {% comment %} pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" {% endcomment %}
+                    <div class="show">
+                        <!--                  SHOW-->
+                    </div>
+                </div>
+                <input type="tel" pattern="^\d{10}$" required placeholder="phone no" class="box" name="phone">
+                <input type="text" placeholder="licence no" class="box" name="lnc_no" required>
+                <input type="text" placeholder="your address" class="box" cols="30" rows="10" name="address" required> 
+                <!--            <input type="address" placeholder="address" class="box" name="address"> -->
+
+                <input type="submit" value="submit" class="btn">
+
+               
+        </form>
+        </div>
+        <div id="message">
+            <h3>Password must contain the following:</h3>
+            <p id="letter" class="invalid">A <b>lowercase</b> letter</p>
+            <p id="capital" class="invalid">A <b>capital (uppercase)</b> letter</p>
+            <p id="number" class="invalid">A <b>number</b></p>
+            <p id="length" class="invalid">Minimum <b>8 characters</b></p>
+        </div>
+
+
+        {% block homeimage %}
+        <section class="home" id="home">
+            <h3 data-speed="-2" class="home-parallax">find your car</h3>
+            <img data-speed="5" class="home-parallax" src=" {% static 'image/home-img.png' %} " alt="">
+            <a data-speed="7" href="{{ '/vehicles' }}" class="btn home-parallax">explore cars</a>
+        </section>
+        {% endblock %}
+
+        
+
+        {% block popularvehicles %}
+        <section class="vehicles" id="vehicles">
+            <h1 class="heading">
+                <span>popular vehicles</span>
+            </h1>
+            <div class="swiper vehicles-slider">
+                <div class="swiper-wrapper">
+                    {% for vdata in vehicle %}
+                    <div class="swiper-slide box">
+                        <img src="/media/{{ vdata.vehicle_photo}} " alt="">
+                        <div class="content">
+                            <h3>{{ vdata.vehicle_name }}</h3>
+                            <div class="price"> <span>price : </span>{{ vdata.rent_per_day }}/- </div>
+                            <p>Vehicle type : {{ vdata.vehicle_type }}<br></p>
+                            <p>location : {{ vdata.vehicle_location }}</p>
+                            <p>vehicle_number : {{ vdata.vehicle_number }}</p>
+                            <p>description :{{ vdata.vehicle_description }}</p>
+                            <a href="/checkout/{{ vdata.id }}" class="btn">Book</a>
+
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                <div class="swiper-pagination"></div>
+            </div>
+
+
+            <!-- Another Popular Vehicles -->
+            <div class="swiper vehicles-slider">
+                <div class="swiper-wrapper">
+                    {% for vdata in x %}
+                    <div class="swiper-slide box">
+                        <img src="/media/{{ vdata.vehicle_photo}} " alt="">
+                        <div class="content">
+                            <h3>{{ vdata.vehicle_name }}</h3>
+                            <div class="price"> <span>price : </span>{{ vdata.rent_per_day }}/- </div>
+                            <p>Vehicle type : {{ vdata.vehicle_type }}<br></p>
+                            <p>location : {{ vdata.vehicle_location }}</p>
+                            <p>vehicle_number : {{ vdata.vehicle_number }}</p>
+                            <p>description :{{ vdata.vehicle_description }}</p>
+                            <a href="/checkout/{{ vdata.id }}" class="btn">Book</a>
+
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                <div class="swiper-pagination"></div>
+            </div>
+        </section>
+        {% endblock %}
+
+        {% block ourservices %}
+        <section class="services" id="services">
+
+            <h1 class="heading"> 
+                <span>our services</span>
+            </h1>
+
+            <div class="box-container">
+
+                <div class="box">
+                    <i class="fas fa-car"></i>
+                    <h3>About</h3>
+                    <p>We are going to provide Vehicles on rent as pay_per_day.</p>
+                    <a href="#" class="btn"> read more</a>
+                </div>
+
+                <div class="box">
+                    <i class="fas fa-tools"></i>
+                    <h3>Services</h3>
+                    <p>We are going to provide Vehicles on rent as pay_per_day.</p>
+                    <a href="#" class="btn"> read more</a>
+                </div>
+
+                <div class="box">
+                    <i class="fas fa-headset"></i>
+                    <h3>24/7 support</h3>
+                    <p>RAVcarz Service are available all over the Gujarat to provide well maintained vehicles on rent .
+                    </p>
+                    <a href="#" class="btn"> read more</a>
+                </div>
+
+            </div>
+
+        </section>
+        {% endblock %}
+
+        {% block ourcars %}
+        <section class="featured" id="featured">
+
+            <h1 class="heading"> 
+                <span>our cars</span> 
+            </h1>
+
+            <div class="swiper featured-slider">
+
+                <div class="swiper-wrapper">
+                    {% for data1 in vehicle %}
+                    <div class="swiper-slide box">
+                        <img src="/media/{{ data1.vehicle_photo}}" alt="">
+                        <div class="content">
+                            <h3>{{ data1.vehicle_name }}</h3>
+                            <p>vehicle type : {{ data1.vehicle_type }}</p>
+                            <p>location : {{ data1.vehicle_location }}</p>
+                            <p>vehicle_number : {{ data1.vehicle_number }}</p>
+                            <p>description :{{ data1.vehicle_description }}</p>
+                            <div class="price"> rent per day :{{ data1.rent_per_day }}/-</div>
+                            <a href="/checkout/{{ data1.id }}" class="btn">Book</a>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <div class="swiper-pagination"></div>
+            </div>
+        </section>
+
+        <section class="featured">
+            <div class="swiper featured-slider">
+
+                <div class="swiper-wrapper">
+                    {% for data in x %}
+                    <div class="swiper-slide box">
+                        <img src="/media/{{ data.vehicle_photo}}" alt="">
+                        <div class="content">
+                            <h3>{{ data.vehicle_name }}</h3>
+                            <p>vehicle type : {{ data.vehicle_type }}</p>
+                            <p>location : {{ data.vehicle_location }}</p>
+                            <p>vehicle_number : {{ data.vehicle_number }}</p>
+                            <p>description :{{ data.vehicle_description }}</p>
+                            <div class="price"> rent per day :{{ data.rent_per_day }}/-</div>
+                            <a href="/checkout/{{ data.id }}" class="btn">Book</a>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <div class="swiper-pagination"></div>
+            </div>
+        </section>
+        {% endblock %}
+
+<!--        {# <section class="newsletter">#}-->
+<!--            {# <h3>subscribe for latest updates</h3>#}-->
+<!--            {# <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatum, suscipit.</p>#}-->
+<!--            {# <form action="">#}-->
+<!--                {# <input type="email" placeholder="enter your email">#}-->
+<!--                {# <input type="submit" value="subscribe">#}-->
+<!--                {# </form>#}-->
+<!--            {# </section>#}-->
+
+        {% block contactus %}
+        <section class="contact" id="contact">
+
+            <h1 class="heading">
+                <span>contact us</span>
+            </h1>
+
+            <div class="row">
+
+                <iframe class="map"
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3988.797567448907!2d103.85368221533052!3d1.289669162092649!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31da19a936c551cd%3A0x7fb4e58ad9cd826e!2sSingapore%20Flyer!5e0!3m2!1sen!2ssg!4v1691234654321"
+                    allowfullscreen="" loading="lazy"></iframe>
+
+                <form action="/contactdata" method="post">
+                    {% csrf_token %}
+                    <h3>get in touch</h3>
+                    <input type="text" placeholder="your name" class="box" name="fname">
+                    <input type="email" placeholder="your email" class="box" name="email">
+                    <input type="tel" placeholder="your mobile no" class="box" name="phone">
+                    <textarea placeholder="your message" class="box" cols="30" rows="10" name="mess"></textarea>
+                    <input type="submit" value="send message" class="btn">
+                </form>
+
+            </div>
+
+        </section>
+        {% endblock %}
+        {% block footer %}
+        <section class="footer" id="footer">
+
+            <div class="box-container">
+
+                
+
+                <div class="box">
+                    <h3>quick links</h3>
+                    <a href="index"> <i class="fas fa-arrow-right"></i> home </a>
+                    <a href="vehicles"> <i class="fas fa-arrow-right"></i> vehicles </a>
+                    <a href="services"> <i class="fas fa-arrow-right"></i> services </a>
+                    <a href="#"> <i class="fas fa-arrow-right"></i> featured </a>
+                    <a href="feedback"> <i class="fas fa-arrow-right"></i> reviews </a>
+                    <a href="contact"> <i class="fas fa-arrow-right"></i> contact </a>
+                </div>
+
+                <div class="box">
+                    <h3>contact info</h3>
+                    <a href="#"> <i class="fas fa-phone"></i> +91 1234567890 </a>
+                    <a href="#"> <i class="fas fa-phone"></i> +91 9876564342 </a>
+                    <a href="#"> <i class="fas fa-envelope"></i> RAVcarz@gmail.com </a>
+                    <a href="#"> <i class="fas fa-map-marker-alt"></i> Ahmedabad, india - 380052 </a>
+                </div>
+
+            
+
+            </div>
+
+            <div class="credit"> © 2023 RAVcarz, Inc. All Rights Reserved </div>
+
+        </section>
+        {% endblock %}
+
+        <script src="https://unpkg.com/swiper@7/swiper-bundle.min.js"></script>
+
+        <script src=" {% static 'js/script.js' %} "></script>
+        <script src=" {% static 'js/passvalid.js' %} "></script>
+        <script src=" {% static 'js/uiconscript.js' %} "></script>
+
+
+    </body>
+
+</html>

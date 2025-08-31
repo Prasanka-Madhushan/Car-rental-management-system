@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <title>Reset Password</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <div class="login-form-container">
+        {% if error %}
+            <p style="color:red;">{{ error }}</p>
+        {% elif success %}
+            <p style="color:green;">{{ success }}</p>
+            <p><a href="/index">Login</a></p>
+        {% else %}
+            <form method="post">
+                {% csrf_token %}
+                <h3>Reset Password</h3>
+                <input type="password" name="password" class="box" placeholder="New password" required>
+                <input type="submit" value="Reset Password" class="btn">
+            </form>
+        {% endif %}
+    </div>
+</body>
+</html>

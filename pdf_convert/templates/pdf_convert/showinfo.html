@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    <title>BOOKING</title>
+  </head>
+  <body>
+    <h1>BOOKING</h1>  
+    <div class="container">
+        <div class="justify-content-center">
+            <div class="col-md-12">
+                <table class="table">
+                    <thead>
+                      <tr>
+                        <th scope="col">vehicle_id</th>
+                        <th scope="col">login_id</th>
+                        <th scope="col">from_duration</th>
+                        <th scope="col">from_to</th>
+                        <th scope="col">amount</th>
+                        <th scope="col">booking_date</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                        {% for show_booking_table in rentalapp %}
+                        
+                       <tr>
+                        
+                        <td>{{show_booking_table.vehicle_id}}</td>
+                        <td>{{show_booking_table.login_id}}</td>
+                        <td>{{show_booking_table.from_duration}}</td>
+                        <td>{{show_booking_table.from_to}}</td>
+                        <td>{{show_booking_table.amount}}</td>
+                        <td>{{show_booking_table.booking_date}}</td>
+                      </tr>
+                      {% endfor %}
+                     
+                    </tbody>
+                  </table>
+        
+            </div>
+        
+        </div>
+        <a class="btn btn-primary m-2" href="{% url 'Create-Pdf' %}">Create PDF</a>
+    </div>
+   
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+  </body>
+</html>
